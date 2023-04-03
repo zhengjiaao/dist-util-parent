@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.dist.util</groupId>
+        <artifactId>dist-util-parent</artifactId>
+        <version>1.0.0</version>
+    </parent>
+
+    <artifactId>dist-util-test</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.artifactId}</name>
+    <url>https://github.com/</url>
+    <description>工具类测试</description>
+
+    <properties>
+        <!--spring-boot-->
+        <spring-boot-dependencies.version>2.3.12.RELEASE</spring-boot-dependencies.version>
+        <!--java >=1.8-->
+        <java.version>1.8</java.version>
+        <!--插件版本-->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.plugin.version>3.6.0</maven.compiler.plugin.version>
+        <maven.clean.plugin.version>3.1.0</maven.clean.plugin.version>
+        <mavne.surefire.plugin.version>2.19.1</mavne.surefire.plugin.version>
+        <maven-war-plugin.version>3.3.2</maven-war-plugin.version>
+
+        <!--Dist bom工具包-->
+        <dist-utils-bom.version>1.0.0-SNAPSHOT</dist-utils-bom.version>
+
+        <!--<commons-lang3.version>3.11</commons-lang3.version>-->
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+
+        <!--org.apache.commons 版本很少会冲突，一般是向下兼容性的。但为了避免可能存在的版本冲突，推荐将dist-utils-bom放到最上面-->
+        <!--dist-utils-bom 定义的版本 commons-lang3:3.12.0-->
+        <!--spring-boot-dependencies:2.3.12.RELEASE 定义的版本 commons-lang3:3.10-->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <!--            <version>${commons-lang3.version}</version>-->
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-model</artifactId>
+            <version>3.8.6</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.13</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.83</version>
+        </dependency>
+        <!--Dist 定制工具包-->
+      <!--  <dependency>
+            <groupId>com.dist</groupId>
+            <artifactId>dist-util-core</artifactId>
+        </dependency>-->
+    </dependencies>
+
+    <dependencyManagement>
+        <dependencies>
+            <!--由于spring-boot-dependencies定义了部分org.apache.commons工具包版本，为了避免冲突，最好放到最上面-->
+
+            <!--spring-boot-dependencies-->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot-dependencies.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!--dist-utils-bom-->
+            <dependency>
+                <groupId>com.dist.util</groupId>
+                <artifactId>dist-util-bom</artifactId>
+                <version>1.0.0</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-clean-plugin</artifactId>
+                <version>${maven.clean.plugin.version}</version>
+            </plugin>
+            <!--maven的编译插件-->
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <!--开发版本-->
+                    <source>${java.version}</source>
+                    <!--.class文件版本-->
+                    <target>${java.version}</target>
+                    <!--打包后的编码-->
+                    <encoding>${project.build.sourceEncoding}</encoding>
+                </configuration>
+            </plugin>
+            <!--打包跳过测试-->
+            <plugin>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${mavne.surefire.plugin.version}</version>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+            <!--部署到远程仓库-->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <!--true 跳过发布部署到远程仓库-->
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
